@@ -1,6 +1,3 @@
-<<<<<<< HEAD
- 
-=======
 <footer class="bg-[#4169e1] text-white py-6 mt-10">
   <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-6 text-center md:text-left">
     <div>
@@ -42,4 +39,3 @@
 </footer>
 </body>
 </html>
->>>>>>> origin/master

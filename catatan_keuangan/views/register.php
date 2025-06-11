@@ -1,14 +1,4 @@
 <?php
-<<<<<<< HEAD
-// Menghubungkan ke database
-include_once(__DIR__ . '/../config/db.php');
-
-// Cek jika form dikirim
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nama = mysqli_real_escape_string($conn, $_POST['nama']);
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $password = mysqli_real_escape_string($conn, $_POST['password']);
-=======
 include_once(__DIR__ . '/../config/db.php');
 
 // Jalankan saat form dikirim
@@ -30,18 +20,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "<script>alert('Email sudah terdaftar!'); window.history.back();</script>";
         exit;
     }
->>>>>>> origin/master
 
     // Enkripsi password
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-<<<<<<< HEAD
-    // Query insert data
-    $query = "INSERT INTO users (nama, email, password) VALUES ('$nama', '$email', '$hashedPassword')";
-=======
     // Simpan data user baru
     $query = "INSERT INTO users (nama, email, password, nomor) VALUES ('$nama', '$email', '$hashedPassword', '$nomor')";
->>>>>>> origin/master
     $result = mysqli_query($conn, $query);
 
     if ($result) {
@@ -51,11 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
-<<<<<<< HEAD
-=======
 
 
->>>>>>> origin/master
 <!DOCTYPE html>
 <html lang="en">
 <head>

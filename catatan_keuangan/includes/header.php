@@ -1,6 +1,3 @@
-<<<<<<< HEAD
- 
-=======
 <?php
 include(__DIR__ . '/../config/db.php');
 
@@ -48,4 +45,3 @@ $base_url = '/WEBPRAK-main/catatan_keuangan'; // sesuaikan jika berubah
       </div>
     </nav>
   </header>
->>>>>>> origin/master
