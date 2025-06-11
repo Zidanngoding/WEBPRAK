@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 // Menghubungkan ke database
 include_once(__DIR__ . '/../config/db.php');
 
@@ -7,12 +8,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nama = mysqli_real_escape_string($conn, $_POST['nama']);
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $password = mysqli_real_escape_string($conn, $_POST['password']);
+=======
+include_once(__DIR__ . '/../config/db.php');
+
+// Jalankan saat form dikirim
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $nama = isset($_POST['nama']) ? mysqli_real_escape_string($conn, $_POST['nama']) : '';
+    $email = isset($_POST['email']) ? mysqli_real_escape_string($conn, $_POST['email']) : '';
+    $password = isset($_POST['password']) ? mysqli_real_escape_string($conn, $_POST['password']) : '';
+    $nomor = isset($_POST['nomor']) ? mysqli_real_escape_string($conn, $_POST['nomor']) : '';
+
+    // Validasi jika field kosong
+    if (empty($nama) || empty($email) || empty($password) || empty($nomor)) {
+        echo "<script>alert('Semua field wajib diisi!'); window.history.back();</script>";
+        exit;
+    }
+
+    // Cek apakah email sudah terdaftar
+    $cekEmail = mysqli_query($conn, "SELECT id FROM users WHERE email = '$email'");
+    if (mysqli_num_rows($cekEmail) > 0) {
+        echo "<script>alert('Email sudah terdaftar!'); window.history.back();</script>";
+        exit;
+    }
+>>>>>>> origin/master
 
     // Enkripsi password
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
+<<<<<<< HEAD
     // Query insert data
     $query = "INSERT INTO users (nama, email, password) VALUES ('$nama', '$email', '$hashedPassword')";
+=======
+    // Simpan data user baru
+    $query = "INSERT INTO users (nama, email, password, nomor) VALUES ('$nama', '$email', '$hashedPassword', '$nomor')";
+>>>>>>> origin/master
     $result = mysqli_query($conn, $query);
 
     if ($result) {
@@ -22,6 +51,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> origin/master
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -87,4 +121,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </div>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> origin/master
