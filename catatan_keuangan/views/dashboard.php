@@ -1,97 +1,159 @@
 <?php
 session_start();
-include_once(__DIR__ . '/../config/db.php');
-
-if (!isset($_SESSION['user'])) {
-    $_SESSION['error'] = "Silakan login terlebih dahulu.";
-    header("Location: ../login.php");
-    exit;
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
 }
 
-$user = $_SESSION['user'];
-$nama = htmlspecialchars($user['nama']);
+include('config/db.php');
+
+$user_id = $_SESSION['user_id'];
+
+// Total Pemasukan
+$pemasukan_result = mysqli_query($conn, "SELECT SUM(jumlah) AS total FROM pemasukan WHERE id_user = $user_id");
+$total_pemasukan = mysqli_fetch_assoc($pemasukan_result)['total'] ?? 0;
+
+// Total Pengeluaran
+$pengeluaran_result = mysqli_query($conn, "SELECT SUM(jumlah) AS total FROM pengeluaran WHERE id_user = $user_id");
+$total_pengeluaran = mysqli_fetch_assoc($pengeluaran_result)['total'] ?? 0;
+
+// Riwayat transaksi
+$riwayat = [];
+
+// Ambil pemasukan
+$query1 = mysqli_query($conn, "SELECT id, tanggal, keterangan, jumlah, 'Pemasukan' AS tipe FROM pemasukan WHERE id_user = $user_id");
+while ($row = mysqli_fetch_assoc($query1)) {
+    $riwayat[] = $row;
+}
+
+// Ambil pengeluaran
+$query2 = mysqli_query($conn, "SELECT id, tanggal, keterangan, jumlah, 'Pengeluaran' AS tipe FROM pengeluaran WHERE id_user = $user_id");
+while ($row = mysqli_fetch_assoc($query2)) {
+    $riwayat[] = $row;
+}
+
+// Urutkan berdasarkan tanggal DESC
+usort($riwayat, function ($a, $b) {
+    return strtotime($b['tanggal']) - strtotime($a['tanggal']);
+});
 ?>
 
-<?php include_once(__DIR__ . '/../includes/header.php'); ?>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - MoneyTracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f5f7fa;
+        }
+        .navbar {
+            background-color: #4169E1;
+        }
+        .navbar-brand, .nav-link, .text-white {
+            color: #fff !important;
+        }
+        .card-title {
+            font-weight: bold;
+        }
+        .card {
+            border-left: 5px solid #4169E1;
+        }
 
-<main class="bg-[#f5f7fa] min-h-screen p-6">
-  <div class="max-w-7xl mx-auto">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-6">
-      <div>
-        <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
-        <p class="text-gray-500">Hi, <?= $nama; ?> 👋 Selamat datang kembali!</p>
-      </div>
-      <img src="../assets/1.jpg" alt="User Avatar" class="w-10 h-10 rounded-full">
+        /* Sidebar */
+        #sidebar {
+            width: 250px;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #4169E1;
+            padding: 1rem;
+            display: none;
+            z-index: 999;
+        }
+
+        #sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 0.5rem 0;
+        }
+
+        #sidebar a:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg px-3">
+    <button class="btn btn-light me-3" id="toggleSidebar">☰</button>
+    <a class="navbar-brand" href="#">MoneyTracker</a>
+    <div class="collapse navbar-collapse">
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a href="logout.php" class="nav-link text-white">Logout</a></li>
+        </ul>
+    </div>
+</nav>
+
+<?php include('sidebar.php'); ?>
+
+<div class="container mt-4">
+    <h2 class="mb-4">Dashboard</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5 class="card-title text-success">Total Pemasukan</h5>
+                <p class="card-text">Rp <?= number_format($total_pemasukan, 0, ',', '.') ?></p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-3">
+                <h5 class="card-title text-danger">Total Pengeluaran</h5>
+                <p class="card-text">Rp <?= number_format($total_pengeluaran, 0, ',', '.') ?></p>
+            </div>
+        </div>
     </div>
 
-    <!-- Overview Box -->
-    <div class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white rounded-2xl p-6 shadow mb-10">
-      <div class="flex justify-between items-center">
-        <div>
-          <h2 class="text-xl font-semibold mb-1">Halo, <?= $nama; ?> ☕</h2>
-          <p class="text-sm opacity-90">Apa yang ingin kamu lakukan hari ini?</p>
-        </div>
-        <img src="https://i.pinimg.com/736x/ba/83/5d/ba835dbbc7d85bb2442d31dd250b76e2.jpg" alt="Bear" class="w-24 h-24">
-      </div>
-    </div>
+    <h4>Riwayat Transaksi</h4>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Tanggal</th>
+                <th>Keterangan</th>
+                <th>Jumlah</th>
+                <th>Tipe</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($riwayat as $r) : ?>
+                <tr>
+                    <td><?= htmlspecialchars($r['tanggal']) ?></td>
+                    <td><?= htmlspecialchars($r['keterangan']) ?></td>
+                    <td>Rp <?= number_format($r['jumlah'], 0, ',', '.') ?></td>
+                    <td><?= $r['tipe'] ?></td>
+                    <td>
+                        <a href="transaksi.php?edit=<?= $r['tipe'] ?>&id=<?= $r['id'] ?>" class="btn btn-sm btn-warning">Edit</a>
+                        <a href="transaksi.php?delete=<?= $r['tipe'] ?>&id=<?= $r['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus data ini?')">Hapus</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 
-    <!-- Cards Kegiatan -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <a href="../pemasukan.php" class="bg-white rounded-xl p-5 shadow hover:shadow-md transition">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="bg-blue-100 text-blue-600 p-2 rounded-full">
-            💰
-          </div>
-          <h3 class="text-lg font-semibold">Tambah Pemasukan</h3>
-        </div>
-        <p class="text-sm text-gray-500">Catat pemasukan harianmu dengan cepat.</p>
-      </a>
+<script>
+    const btn = document.getElementById('toggleSidebar');
+    const sidebar = document.getElementById('sidebar');
 
-      <a href="../pengeluaran.php" class="bg-white rounded-xl p-5 shadow hover:shadow-md transition">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="bg-red-100 text-red-600 p-2 rounded-full">
-            🧾
-          </div>
-          <h3 class="text-lg font-semibold">Tambah Pengeluaran</h3>
-        </div>
-        <p class="text-sm text-gray-500">Lacak pengeluaran kamu dengan mudah.</p>
-      </a>
+    btn.addEventListener('click', () => {
+        sidebar.style.display = sidebar.style.display === 'block' ? 'none' : 'block';
+    });
+</script>
 
-      <a href="../riwayat.php" class="bg-white rounded-xl p-5 shadow hover:shadow-md transition">
-        <div class="flex items-center gap-3 mb-2">
-          <div class="bg-yellow-100 text-yellow-600 p-2 rounded-full">
-            📊
-          </div>
-          <h3 class="text-lg font-semibold">Lihat Riwayat</h3>
-        </div>
-        <p class="text-sm text-gray-500">Lihat semua histori transaksi kamu.</p>
-      </a>
-    </div>
-
-    <!-- Kartu Akses Cepat dan Hapus -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-      <a href="../kategori.php" class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl p-5 shadow hover:shadow-lg transition">
-        <div class="flex justify-between items-center">
-          <div>
-            <h3 class="text-lg font-semibold">Akses Cepat</h3>
-            <p class="text-sm opacity-90 mt-1">Kelola kategori pemasukan & pengeluaran.</p>
-          </div>
-          <div class="text-2xl">⚡</div>
-        </div>
-      </a>
-
-      <a href="../hapus_semua.php" onclick="return confirm('Yakin ingin menghapus semua data?')" class="bg-gradient-to-r from-pink-400 to-red-500 text-white rounded-xl p-5 shadow hover:shadow-lg transition">
-        <div class="flex justify-between items-center">
-          <div>
-            <h3 class="text-lg font-semibold">Hapus Semua Data</h3>
-            <p class="text-sm opacity-90 mt-1">Reset seluruh transaksi di database.</p>
-          </div>
-          <div class="text-2xl">🗑️</div>
-        </div>
-      </a>
-    </div>
-  </div>
-</main>
-
-<?php include_once(__DIR__ . '/../includes/footer.php'); ?>
+</body>
+</html>
