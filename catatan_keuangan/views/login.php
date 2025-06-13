@@ -1,27 +1,39 @@
 <?php
 session_start();
-include_once(__DIR__ . '/../config/db.php');
+include_once('config/db.php'); // Pastikan path-nya benar
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $email = trim($_POST['email']);
     $password = $_POST['password'];
 
-    $query = "SELECT * FROM users WHERE email = '$email'";
-    $result = mysqli_query($conn, $query);
+    // Cek input tidak kosong
+    if (!empty($email) && !empty($password)) {
+        $query = "SELECT id, email, password FROM users WHERE email = ?";
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "s", $email);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
 
-    if ($result && mysqli_num_rows($result) === 1) {
-        $user = mysqli_fetch_assoc($result);
+        if ($result && mysqli_num_rows($result) === 1) {
+            $user = mysqli_fetch_assoc($result);
 
-        if (password_verify($password, $user['password'])) {
-            $_SESSION['user'] = $user;
-            header("Location: dashboard.php");
-            exit;
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_email'] = $user['email'];
+                header("Location: dashboard.php");
+                exit;
+            } else {
+                $_SESSION['error'] = "Password salah.";
+            }
         } else {
-            $_SESSION['error'] = "Password salah.";
+            $_SESSION['error'] = "Akun tidak ditemukan.";
         }
     } else {
-        $_SESSION['error'] = "Akun tidak ditemukan.";
+        $_SESSION['error'] = "Semua field wajib diisi.";
     }
+
+    header("Location: login.php");
+    exit;
 }
 ?>
 
@@ -38,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <div class="flex flex-col md:flex-row bg-white shadow-2xl rounded-3xl overflow-hidden max-w-4xl w-full">
     
     <div class="md:w-1/2 flex">
-      <img src="../assets/3.jpg" alt="Login Image" class="object-cover w-full h-full">
+      <img src="/MoneyTracker/assets/3 (1).jpg" alt="Login Image" class="object-cover w-full h-full">
     </div>
 
     <div class="md:w-1/2 p-10">
