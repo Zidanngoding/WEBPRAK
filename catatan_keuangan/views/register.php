@@ -1,41 +1,61 @@
 <?php
-include_once(__DIR__ . '/../config/db.php');
+session_start();
+include_once('config/db.php');
 
 // Jalankan saat form dikirim
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nama = isset($_POST['nama']) ? mysqli_real_escape_string($conn, $_POST['nama']) : '';
-    $email = isset($_POST['email']) ? mysqli_real_escape_string($conn, $_POST['email']) : '';
-    $password = isset($_POST['password']) ? mysqli_real_escape_string($conn, $_POST['password']) : '';
-    $nomor = isset($_POST['nomor']) ? mysqli_real_escape_string($conn, $_POST['nomor']) : '';
+    $nama = trim($_POST['nama']);
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $nomor = trim($_POST['nomor']);
 
-    // Validasi jika field kosong
+    // Validasi dasar
     if (empty($nama) || empty($email) || empty($password) || empty($nomor)) {
-        echo "<script>alert('Semua field wajib diisi!'); window.history.back();</script>";
+        $_SESSION['error'] = "Semua field wajib diisi!";
+        header("Location: register.php");
+        exit;
+    }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $_SESSION['error'] = "Format email tidak valid!";
+        header("Location: register.php");
+        exit;
+    }
+
+    if (!preg_match('/^[0-9]{10,15}$/', $nomor)) {
+        $_SESSION['error'] = "Nomor HP harus 10-15 digit angka!";
+        header("Location: register.php");
         exit;
     }
 
     // Cek apakah email sudah terdaftar
-    $cekEmail = mysqli_query($conn, "SELECT id FROM users WHERE email = '$email'");
-    if (mysqli_num_rows($cekEmail) > 0) {
-        echo "<script>alert('Email sudah terdaftar!'); window.history.back();</script>";
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows > 0) {
+        $_SESSION['error'] = "Email sudah terdaftar!";
+        header("Location: register.php");
         exit;
     }
 
-    // Enkripsi password
+    // Hash password
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Simpan data user baru
-    $query = "INSERT INTO users (nama, email, password, nomor) VALUES ('$nama', '$email', '$hashedPassword', '$nomor')";
-    $result = mysqli_query($conn, $query);
+    // Simpan user baru
+    $stmt = $conn->prepare("INSERT INTO users (nama, email, password, nomor) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $nama, $email, $hashedPassword, $nomor);
 
-    if ($result) {
+    if ($stmt->execute()) {
         echo "<script>alert('Registrasi berhasil! Silakan login.'); window.location.href='login.php';</script>";
+        exit;
     } else {
-        echo "<script>alert('Registrasi gagal: " . mysqli_error($conn) . "');</script>";
+        $_SESSION['error'] = "Registrasi gagal!";
+        header("Location: register.php");
+        exit;
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -50,7 +70,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <div class="flex flex-col md:flex-row bg-white shadow-2xl rounded-3xl overflow-hidden max-w-4xl w-full">
     
     <div class="md:w-1/2 flex">
-    <img src="../assets/2.jpg" alt="Register Image" class="object-cover w-full h-full">
+    <img src="/MoneyTracker/assets/2.jpg" alt="Register Image" class="object-cover w-full h-full">
 
 
     </div>
@@ -102,8 +122,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
   </div>
 </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> origin/master
