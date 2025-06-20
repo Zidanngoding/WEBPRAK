@@ -1,6 +1,12 @@
 <?php
 session_start();
 
+// Jika user sudah login, redirect ke dashboard
+if (isset($_SESSION['user_id'])) {
+    header("Location: ../views/dashboard.php");
+    exit;
+}
+
 // Pastikan path file database sudah benar
 include_once(__DIR__ . '/../config/db.php');
 
