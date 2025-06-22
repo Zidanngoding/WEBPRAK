@@ -34,8 +34,13 @@ Fitur Login Sistem berfungsi sebagai pintu masuk pengguna ke dalam sistem. Setia
 Manfaat Sistem Moneytracker
 
 Meningkatkan kesadaran dan pengelolaan keuangan pribadi.
+
 Memudahkan pencatatan pemasukan dan pengeluaran secara sistematis.
+
 Memberikan visualisasi keuangan yang intuitif dan mudah dipahami.
+
 Menyediakan riwayat dan laporan transaksi lengkap dan terstruktur.
+
 Menjamin keamanan data pengguna dengan sistem login berbasis autentikasi.
+
 Mendukung efisiensi dan kerapian data finansial harian.
