@@ -1,4 +1,5 @@
 Anggota Kelompok 6:
+
 Allisya Syakdari 2317051017
 
 Azmii Haniifah 2317051028
@@ -44,3 +45,6 @@ Menyediakan riwayat dan laporan transaksi lengkap dan terstruktur.
 Menjamin keamanan data pengguna dengan sistem login berbasis autentikasi.
 
 Mendukung efisiensi dan kerapian data finansial harian.
+
+
+![image](https://github.com/user-attachments/assets/5e8907b9-1da8-40d6-bef4-c24e1b946364)
