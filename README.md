@@ -1,7 +1,11 @@
 Anggota Kelompok 6:
 Allisya Syakdari 2317051017
+
 Azmii Haniifah 2317051028
+
 M.Zidane Dako 2357051005
+
+
 --------------Moneytracker----------------
 
 
@@ -30,13 +34,8 @@ Fitur Login Sistem berfungsi sebagai pintu masuk pengguna ke dalam sistem. Setia
 Manfaat Sistem Moneytracker
 
 Meningkatkan kesadaran dan pengelolaan keuangan pribadi.
-
 Memudahkan pencatatan pemasukan dan pengeluaran secara sistematis.
-
 Memberikan visualisasi keuangan yang intuitif dan mudah dipahami.
-
 Menyediakan riwayat dan laporan transaksi lengkap dan terstruktur.
-
 Menjamin keamanan data pengguna dengan sistem login berbasis autentikasi.
-
 Mendukung efisiensi dan kerapian data finansial harian.
