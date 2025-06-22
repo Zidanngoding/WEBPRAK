@@ -93,18 +93,12 @@ Menjamin keamanan dan kerahasiaan data pengguna.
 
 ## 📎 Teknologi yang Digunakan
 
-- **Frontend**: HTML, CSS, JavaScript  
+- **Frontend**: HTML, CSS
 - **Backend**: PHP  
 - **Database**: MySQL  
 - **Visualisasi**: Chart.js
 
 ---
-
-## 🏁 Cara Menjalankan
-
-1. Clone repositori ini ke folder `htdocs` XAMPP:
-   ```bash
-   git clone https://github.com/username/Moneytracker.git
 
 
 
