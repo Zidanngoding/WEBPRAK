@@ -100,6 +100,46 @@ Menjamin keamanan dan kerahasiaan data pengguna.
 
 ---
 
+FITUR MONEY TRACKER
+
+1.Register
+![image](https://github.com/user-attachments/assets/355596f4-72ac-4f5d-a159-015f93608ee4)
+
+2.Login
+![image](https://github.com/user-attachments/assets/e4919caf-ce45-4894-ab30-77f8f9e571e8)
+
+3.Dashboard
+![image](https://github.com/user-attachments/assets/6405313c-98ce-4c57-8110-e246a8d55f3c)
+
+4.Pemasukan 
+![image](https://github.com/user-attachments/assets/1a5b921c-fada-446e-b3d6-fe1164a6fdb6)
+
+5.Pengeluaran
+![image](https://github.com/user-attachments/assets/1c9c38d6-57cc-4221-8211-c8aed4ed584a)
+
+6.Transaksi
+![image](https://github.com/user-attachments/assets/d181fbdb-2338-405f-88f8-06834859dc1a)
+
+7.Edit transaksi
+![image](https://github.com/user-attachments/assets/6538e706-acd5-4764-b5dc-21d29a544905)
+
+8. Tambah Transaksi
+![image](https://github.com/user-attachments/assets/a1e42e91-46fa-4c6e-a8f2-288e2d344d96)
+
+9. Hapus Transaksi
+![image](https://github.com/user-attachments/assets/8efa6831-96a6-44f3-894d-5684fd5d4484)
+
+10. Laporan Keuangan
+![image](https://github.com/user-attachments/assets/84d1a6ef-1abd-4c46-b0f4-740c1e7d494c)
+
+11. Ringkasan bulanan
+![image](https://github.com/user-attachments/assets/385f7006-7bb9-4541-b695-cec53e417576)
 
 
-![image](https://github.com/user-attachments/assets/5e8907b9-1da8-40d6-bef4-c24e1b946364)
+
+
+
+
+
+
+
