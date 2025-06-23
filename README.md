@@ -1,6 +1,6 @@
 # 💸 Moneytracker
 
-## 👥 Anggota Kelompok 6
+## 👥 Anggota Kelompok 4
 
 - Allisya Syakdari - 2317051017  
 - Azmii Haniifah - 2317051028  
